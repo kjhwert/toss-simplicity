@@ -12,16 +12,16 @@ body {
 }
 
 .video-list-wrapper {
-    width: 80%;
+    width: 100%;
     overflow-x: hidden;
 }
 
 .video-list {
     list-style: none;
-    width: 100%;
     display: flex;
     gap: 5px;
     overflow-x:auto;
+    padding: 40px calc(-19vh + 50vw)
 }
 
 .video-list-item {
