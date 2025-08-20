@@ -10,31 +10,53 @@ const INITIAL_CONTENT = Math.ceil(contents.length / 2);
 
 const App = () => {
   const ulRef = useRef<HTMLUListElement>(null);
-  const lisRef = useRef<HTMLLIElement[]>([]);
+
+  const videosRef = useRef<HTMLVideoElement[]>([]);
 
   const [selectedIndex, setSelectedIndex] = useState(INITIAL_CONTENT);
-
-  useEffect(() => {
-    ulRef.current?.scrollTo({
-      left: VIDEO_WIDTH * INITIAL_CONTENT,
-    });
-  }, []);
 
   const handleScroll = (e: UIEvent<HTMLUListElement>) => {
     const ul = e.target as HTMLUListElement;
 
     const nextIndex = Math.floor(ul.scrollLeft / VIDEO_WIDTH);
 
-    const centerX = ul.scrollLeft + ul.clientWidth / 2;
-    const centerLeft = Math.floor(centerX - VIDEO_WIDTH / 2);
-    const centerRight = Math.floor(centerX + VIDEO_WIDTH / 2);
-
-    console.log(centerLeft, centerRight);
-
     if (nextIndex !== selectedIndex) {
+      handleStopVideo(selectedIndex);
+      handlePlayVideo(nextIndex);
       setSelectedIndex(nextIndex);
     }
   };
+
+  const handleStopVideo = (stopIndex: number) => {
+    videosRef.current[stopIndex].pause();
+
+    const video = videosRef.current[stopIndex];
+    if (!video) return;
+
+    video.src = contents[stopIndex].intro;
+    video.load();
+  };
+
+  const handlePlayVideo = (playIndex: number) => {
+    videosRef.current[playIndex].play().then(() => {
+      setTimeout(() => {
+        const video = videosRef.current[playIndex];
+        if (!video) return;
+
+        video.src = contents[playIndex].summary;
+        video.load();
+        video.play();
+      }, 3000);
+    });
+  };
+
+  useEffect(() => {
+    ulRef.current?.scrollTo({
+      left: VIDEO_WIDTH * INITIAL_CONTENT,
+    });
+
+    handlePlayVideo(selectedIndex);
+  }, []);
 
   return (
     <main className="main">
@@ -45,24 +67,19 @@ const App = () => {
           className="video-list scrollbar-hide"
         >
           {contents.map((content, index) => (
-            <li
-              ref={(ref) => {
-                if (ref) {
-                  lisRef.current[index] = ref;
-                }
-              }}
-              key={content.intro}
-              className="video-list-item"
-            >
+            <li key={content.intro} className="video-list-item">
               <video
-                autoPlay={INITIAL_CONTENT === index}
-                muted={INITIAL_CONTENT === index}
-                playsInline
+                ref={(ref) => {
+                  if (ref) {
+                    videosRef.current[index] = ref;
+                  }
+                }}
+                src={content.intro}
+                muted
                 loop
+                playsInline
                 width={VIDEO_WIDTH}
-              >
-                <source src={content.intro} />
-              </video>
+              />
 
               <p className="video-list-title">{content.title}</p>
             </li>

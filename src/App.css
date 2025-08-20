@@ -29,6 +29,11 @@ body {
     cursor:pointer;
 }
 
+.video-list-item video {
+    height: 60vh;
+    object-fit: cover;
+}
+
 .video-list-title {
     width: 100%;
     position: absolute;
