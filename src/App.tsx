@@ -11,8 +11,6 @@ const INITIAL_CONTENT = Math.ceil(contents.length / 2);
 const App = () => {
   const ulRef = useRef<HTMLUListElement>(null);
 
-  const videosRef = useRef<HTMLVideoElement[]>([]);
-
   const [selectedIndex, setSelectedIndex] = useState(INITIAL_CONTENT);
 
   const handleScroll = (e: UIEvent<HTMLUListElement>) => {
@@ -21,59 +19,28 @@ const App = () => {
     const nextIndex = Math.floor(ul.scrollLeft / VIDEO_WIDTH);
 
     if (nextIndex !== selectedIndex) {
-      handleStopVideo(selectedIndex);
-      handlePlayVideo(nextIndex);
       setSelectedIndex(nextIndex);
     }
-  };
-
-  const handleStopVideo = (stopIndex: number) => {
-    videosRef.current[stopIndex].pause();
-
-    const video = videosRef.current[stopIndex];
-    if (!video) return;
-
-    video.src = contents[stopIndex].intro;
-    video.load();
-  };
-
-  const handlePlayVideo = (playIndex: number) => {
-    videosRef.current[playIndex].play().then(() => {
-      setTimeout(() => {
-        const video = videosRef.current[playIndex];
-        if (!video) return;
-
-        video.src = contents[playIndex].summary;
-        video.load();
-        video.play();
-      }, 3000);
-    });
   };
 
   useEffect(() => {
     ulRef.current?.scrollTo({
       left: VIDEO_WIDTH * INITIAL_CONTENT,
     });
-
-    handlePlayVideo(selectedIndex);
   }, []);
 
   return (
-    <main className="main">
-      <article className="video-list-wrapper">
+    <main className="w-full h-[100vh] flex content-center items-center bg-black">
+      <article className="w-full overflow-x-hidden">
         <ul
           ref={ulRef}
           onScroll={handleScroll}
-          className="video-list scrollbar-hide"
+          className="list-none flex gap-[5px] px-[calc(-19vh+50vw)] overflow-x-auto scrollbar-hide"
         >
-          {contents.map((content, index) => (
-            <li key={content.intro} className="video-list-item">
+          {contents.map((content) => (
+            <li key={content.intro} className="relative cursor-pointer">
               <video
-                ref={(ref) => {
-                  if (ref) {
-                    videosRef.current[index] = ref;
-                  }
-                }}
+                className={`min-w-[350px] h-[60vh] object-cover`}
                 src={content.intro}
                 muted
                 loop
@@ -81,7 +48,9 @@ const App = () => {
                 width={VIDEO_WIDTH}
               />
 
-              <p className="video-list-title">{content.title}</p>
+              <p className="w-full absolute bottom-0 flex justify-center text-center text-[3.6vh] text-white leading-[1.2] font-bold whitespace-pre-line bg-gradient-to-b from-[rgba(255,255,255,0)] to-[rgba(0,0,0,1)] m-0 py-[50px]">
+                {content.title}
+              </p>
             </li>
           ))}
         </ul>
