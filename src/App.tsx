@@ -22,6 +22,10 @@ const App = () => {
     const nextIndex = Math.floor(ul.scrollLeft / VIDEO_WIDTH);
 
     if (nextIndex !== selectedIndex) {
+      introVideoRef.current[selectedIndex].pause();
+      summaryVideoRef.current[selectedIndex].pause();
+      void introVideoRef.current[nextIndex].play();
+
       setSelectedIndex(nextIndex);
     }
   };
@@ -33,9 +37,10 @@ const App = () => {
   }, []);
 
   useEffect(() => {
+    // 비디오 선택 변경시 2초 뒤에 summary video 재생
     setTimeout(() => {
       void summaryVideoRef.current[selectedIndex].play();
-    }, 3000);
+    }, 2000);
   }, [selectedIndex]);
 
   return (

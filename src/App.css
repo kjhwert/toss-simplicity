@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 @theme {
-    --animate-fade-in: fade-in 0.5s 3s ease-in-out forwards;
+    --animate-fade-in: fade-in 0.5s 2s ease-in-out forwards;
     @keyframes fade-in {
         0% {
             opacity: 0;
@@ -11,7 +11,7 @@
         }
     }
 
-    --animate-fade-out: fade-out 0.5s 3s ease-in-out forwards;
+    --animate-fade-out: fade-out 0.5s 2s ease-in-out forwards;
     @keyframes fade-out {
         0% {
             opacity: 1;
