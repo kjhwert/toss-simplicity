@@ -49,12 +49,12 @@ const App = () => {
         <ul
           ref={ulRef}
           onScroll={handleScroll}
-          className="list-none flex gap-[5px] px-[calc(-19vh+50vw)] overflow-x-auto scrollbar-hide"
+          className="list-none flex items-end gap-[5px] px-[calc(-19vh+50vw)] overflow-x-auto scrollbar-hide"
         >
           {contents.map((content, index) => (
             <li
               key={content.intro}
-              className="relative cursor-pointer min-w-[350px] h-[60vh]"
+              className={`relative cursor-pointer min-w-[350px] ${selectedIndex === index ? "h-[65vh]" : "h-[60vh]"}`}
             >
               <video
                 ref={(ref) => {
@@ -62,7 +62,7 @@ const App = () => {
                     introVideoRef.current[index] = ref;
                   }
                 }}
-                className={`absolute top-0 left-0 min-w-[350px] h-[60vh] z-10 object-cover ${selectedIndex === index && "animate-fade-out opacity-100"}`}
+                className={`absolute top-0 left-0 min-w-[350px] z-10 object-cover ${selectedIndex === index ? "h-[65vh]" : "h-[60vh]"} ${selectedIndex === index && "animate-fade-out opacity-100"}`}
                 autoPlay={selectedIndex === index}
                 src={content.intro}
                 muted
@@ -77,7 +77,7 @@ const App = () => {
                     summaryVideoRef.current[index] = ref;
                   }
                 }}
-                className={`absolute top-0 left-0 min-w-[350px] h-[60vh] object-cover ${selectedIndex === index && "animate-fade-in opacity-0"}`}
+                className={`absolute top-0 left-0 min-w-[350px] object-cover ${selectedIndex === index ? "h-[65vh]" : "h-[60vh]"} ${selectedIndex === index && "animate-fade-in opacity-0"}`}
                 src={content.summary}
                 muted
                 loop
